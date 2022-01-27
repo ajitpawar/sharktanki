@@ -44,8 +44,7 @@ def index():
     # url1 = 'https://anupamawatch.com/shark-tank-india/'
     url2 = 'https://molkkiserial.com/shark-tank-india/'
     url3 = 'https://herogayab.net/shark-tank-india/'
-    return render_template("index.html", 
-        # data1 = get_video_urls(url1), 
+    return render_template("index.html",
         data2 = get_video_urls(url2),
         data3 = get_video_urls(url3))
 
