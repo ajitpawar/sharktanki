@@ -10,7 +10,7 @@ def create_app(test_config=None):
     CORS(app)
     
     """ only run for first time or when db schema changes. then comment it """
-    db_drop_and_create_all()
+    # db_drop_and_create_all()
 
     @app.route('/', methods=['GET'])
     def home():
