@@ -1,0 +1,39 @@
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+
+<style>
+    * {
+        font-family: "Rubik", "sans-serif";
+    }
+
+    div {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    h1 {
+        color: orange;
+        font-size: 20pt;
+    }
+
+    p {
+        font-size: 14pt;
+    }
+</style>
+
+{% if data %}
+    {% for key, value in data.items() %}
+    <div>
+        <h1><a target="_blank" href="{{ key }}">{{ key }}</a></h1><br>
+        <table class="table table-striped" >
+        <tbody>
+        {% for i in value %}
+          <tr>
+            <td><a target="_blank" href="{{ i.url }}">{{ i.title }}</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        </table>
+    </div>
+    {% endfor %}
+{% endif%}

@@ -1,7 +1,8 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify, render_template
 from flask_cors import CORS
 from models import setup_db, Movie, db_drop_and_create_all
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -9,12 +10,23 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
     
-    """ only run for first time or when db schema changes. then comment it """
+    """ uncomment for first push. push to git. then comment it out and push again, else heroku will throw error"""
     # db_drop_and_create_all()
 
     @app.route('/', methods=['GET'])
     def home():
-        return jsonify({'message': 'Hello, World!'})
+        try:
+            rows = Movie.query.distinct(Movie.source).all()
+            uniq_sources = [r.source for r in rows]
+            result = {}
+
+            for src in uniq_sources:
+                result[src] = Movie.query.filter(Movie.source == src)
+
+            return render_template("index.html", data=result)
+        except:
+            abort(500)
+
     
     @app.route("/movies")
     def get_movies():
