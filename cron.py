@@ -48,23 +48,16 @@ def get_video_urls(homepage_url):
     db.session.commit()
     return
 
-def insert_into_db(src):
-    entry = Movie('test1', 'exmaple.com', src)
-    db.session.add(entry)
-    db.session.commit()
-
 def index():
     urls = [
         'https://herogayab.net/shark-tank-india/',
-        'https://anupamawatch.com/shark-tank-india/',
         'https://molkkiserial.com/shark-tank-india/'
+        'https://anupamawatch.com/shark-tank-india/',
     ]
 
     for url in urls:
         get_video_urls(url)
 
-
 if __name__ == "__main__":
-    # index()
-    test()
+    index()
     
