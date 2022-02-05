@@ -9,9 +9,9 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
     CORS(app)
-    
-    """ uncomment for first push. push to git. then comment it out and push again, else heroku will throw error"""
-    # db_drop_and_create_all()
+
+    """ run cron.py first to create tables in Heroku """
+    # heroku run python3 cron.py --app <app_name>
 
     @app.route('/', methods=['GET'])
     def home():

@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 db = SQLAlchemy(app)
 setup_db(app)
-# db_drop_and_create_all()  # drop and re-create table
+db_drop_and_create_all()  # drop and re-create table on every run
 
 def get_page_urls(url):
     page_urls = [url]
