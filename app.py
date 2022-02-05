@@ -1,53 +1,42 @@
-from flask import Flask, render_template
-import requests
-from bs4 import BeautifulSoup
-from collections import OrderedDict
+import os
+from flask import Flask, request, abort, jsonify
+from flask_cors import CORS
+from models import setup_db, Movie, db_drop_and_create_all
 
-app = Flask(__name__)
+def create_app(test_config=None):
+    # create and configure the app
+    app = Flask(__name__)
+    setup_db(app)
+    CORS(app)
+    """ uncomment at the first time running the app """
+    db_drop_and_create_all()
+    @app.route('/', methods=['GET'])
+    def home():
+        return jsonify({'message': 'Hello,hello, World!'})
+    @app.route("/movies")
+    def get_movies():
+        try:
+            movies = Movie.query.order_by(Movie.release_date).all()
+            movie=[]
+            movie=[mov.release_date for mov in movies]
+            return jsonify(
+                {
+                    "success": True,
+                    "movie name": movie
+                }
+            ), 200
+        except:
+            abort(500)
+    @app.errorhandler(500)
+    def server_error(error):
+        return jsonify({
+            "success": False,
+            "error": 500,
+            "message": "server error"
+        }), 500
+    return app
+app = create_app()
 
-
-def get_page_urls(url):
-    page_urls = [url]
-    html_text = requests.get(url).text
-    soup = BeautifulSoup(html_text, 'html.parser')
-    for link in soup.find_all('a', class_="page"):
-        page_urls.append(link.get('href'))
-
-    return page_urls
-
-def get_episode_urls(page_urls):
-    episode_urls = []
-    for url in page_urls:
-        html_text = requests.get(url).text
-        soup = BeautifulSoup(html_text, 'html.parser')
-        for h2 in soup.find_all('h2', class_="post-box-title"):
-            for link in h2.find_all('a'):
-                episode_urls.append(link.get('href'))
-
-    return episode_urls
-
-def get_video_urls(homepage_url):
-    episode_urls = get_episode_urls(get_page_urls(homepage_url))
-    video_urls = OrderedDict()
-    for url in episode_urls:
-        html_text = requests.get(url).text
-        soup = BeautifulSoup(html_text, 'html.parser')
-        for div in soup.find_all('div', class_="single-post-video"):
-            for link in div.find_all('iframe'):
-                video_urls[soup.title.string] = link.get('src')
-
-    return video_urls
-
-
-@app.route("/")
-def index():
-    # url1 = 'https://anupamawatch.com/shark-tank-india/'
-    url2 = 'https://molkkiserial.com/shark-tank-india/'
-    url3 = 'https://herogayab.net/shark-tank-india/'
-    return render_template("index.html",
-        data2 = get_video_urls(url2),
-        data3 = get_video_urls(url3))
-
-
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT",5000))
+    app.run(host='127.0.0.1',port=port,debug=True)
