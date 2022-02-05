@@ -8,11 +8,14 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
     CORS(app)
+    
     """ uncomment at the first time running the app """
-    db_drop_and_create_all()
+    # db_drop_and_create_all()
+
     @app.route('/', methods=['GET'])
     def home():
         return jsonify({'message': 'Hello,hello, World!'})
+    
     @app.route("/movies")
     def get_movies():
         try:
@@ -27,6 +30,7 @@ def create_app(test_config=None):
             ), 200
         except:
             abort(500)
+    
     @app.errorhandler(500)
     def server_error(error):
         return jsonify({

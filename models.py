@@ -30,20 +30,25 @@ class Movie(db.Model):
     id = Column(Integer, primary_key=True)
     title = Column(String(80), unique=True)
     release_date = Column(db.DateTime)
+    
     def __init__(self, title, release_date):
         self.title = title
         self.release_date = release_date
+    
     def details(self):
         return {
             'id': self.id,
             'title': self.title,
             'release_date': self.release_date,
         }
+    
     def insert(self):
         db.session.add(self)
         db.session.commit()
+    
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+    
     def update(self):
         db.session.commit()
