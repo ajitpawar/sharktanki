@@ -27,21 +27,6 @@ def create_app(test_config=None):
         except:
             abort(500)
 
-    
-    @app.route("/movies")
-    def get_movies():
-        try:
-            movies = Movie.query.order_by(Movie.id).all()
-            movie=[]
-            movie=[m.title for m in movies]
-            return jsonify(
-                {
-                    "titles": movie
-                }
-            ), 200
-        except:
-            abort(500)
-    
     @app.errorhandler(500)
     def server_error(error):
         return jsonify({
