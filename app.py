@@ -14,18 +14,17 @@ def create_app(test_config=None):
 
     @app.route('/', methods=['GET'])
     def home():
-        return jsonify({'message': 'Hello,hello, World!'})
+        return jsonify({'message': 'Hello, World!'})
     
     @app.route("/movies")
     def get_movies():
         try:
-            movies = Movie.query.order_by(Movie.release_date).all()
+            movies = Movie.query.order_by(Movie.id).all()
             movie=[]
-            movie=[mov.release_date for mov in movies]
+            movie=[m.title for m in movies]
             return jsonify(
                 {
-                    "success": True,
-                    "movie name": movie
+                    "titles": movie
                 }
             ), 200
         except:
@@ -39,8 +38,9 @@ def create_app(test_config=None):
             "message": "server error"
         }), 500
     return app
+
 app = create_app()
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT",5000))
-    app.run(host='127.0.0.1',port=port,debug=True)
+    app.run(host='127.0.0.1',port=port,debug=False)

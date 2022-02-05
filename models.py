@@ -7,7 +7,6 @@ db = SQLAlchemy()
 setup_db(app):
     binds a flask application and a SQLAlchemy service
 '''
-
 def setup_db(app):
     database_name ='shark_db'
     default_database_path= "postgres://{}:{}@{}/{}".format('postgres', 'password', 'localhost:5432', database_name)
@@ -28,18 +27,24 @@ def db_drop_and_create_all():
 class Movie(db.Model):
     __tablename__ = 'movies'
     id = Column(Integer, primary_key=True)
-    title = Column(String(80), unique=True)
+    title = Column(String(280))
     release_date = Column(db.DateTime)
+    source = Column(String(280))
+    url = Column(String(280))
     
-    def __init__(self, title, release_date):
+    def __init__(self, title, release_date, source, url):
         self.title = title
         self.release_date = release_date
+        self.source = source
+        self.url = url
     
     def details(self):
         return {
             'id': self.id,
             'title': self.title,
             'release_date': self.release_date,
+            'source': self.source,
+            'url': self.url
         }
     
     def insert(self):
